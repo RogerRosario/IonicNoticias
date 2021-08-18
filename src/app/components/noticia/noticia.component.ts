@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Article } from '../../interfaces/interfaces';
-
+import { Storage } from '@ionic/storage-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ActionSheetController } from '@ionic/angular';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { DataLocalService } from '../../services/data-local.service';
 
 @Component({
   selector: 'app-noticia',
@@ -15,12 +16,18 @@ export class NoticiaComponent implements OnInit {
 
   @Input() noticia: Article;
   @Input() indice: number;
+  @Input() enFavoritos;
+
 
   constructor(private iab: InAppBrowser,
               private actionSheetCrtl: ActionSheetController,
-              private socialSharing: SocialSharing) { }
+              private socialSharing: SocialSharing,
+              private dataLocalService: DataLocalService,
+              private storage: Storage) { }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    await this.storage.create();
+  }
 
   abrirNoticia(){
     //console.log('Noticia', this.noticia.url);
@@ -29,16 +36,38 @@ export class NoticiaComponent implements OnInit {
   }
 
   async lanzarMenu(){
-    const actionSheet = await this.actionSheetCrtl.create({
-      buttons: [
-      {
+
+    let guardarBorrarBtn;
+
+    if(this.enFavoritos){
+
+      guardarBorrarBtn = {
+        text: 'Borrar favorito',
+        icon: 'trash',
+        cssClass: 'action-dark',
+        handler: () => {
+          console.log('Favorito Borrado');
+          this.dataLocalService.borrarNoticia(this.noticia);
+        }
+      };
+
+    } else{
+
+     guardarBorrarBtn = {
         text: 'Agregar favorito',
         icon: 'star',
         cssClass: 'action-dark',
         handler: () => {
-          console.log('fav');
+          console.log('favorito');
+          this.dataLocalService.guardarNoticia(this.noticia);
         }
-      },  
+      };
+
+    }
+
+    const actionSheet = await this.actionSheetCrtl.create({
+      buttons: [
+      guardarBorrarBtn,
       { 
         text: 'Compartir',
         icon: 'share',

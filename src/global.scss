@@ -41,7 +41,7 @@
 .action-dark,
 .action-sheet-group {
     background-color: var( --ion-color-dark) !important;
-    color: white !important;
+    background-color: white !important;
 }
 
 .action-dark .ion-icon {
@@ -54,4 +54,43 @@
 
 .action-sheet-cancel.sc-ion-action-sheet-ios::after {
     background: var( --ion-color-dark) !important;
+}
+
+.tab-selected {
+    color: var( --ion-color-primary) !important;
+}
+
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.animated.fast {
+    -webkit-animation-duration: 800ms;
+    animation-duration: 800ms;
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
 }
